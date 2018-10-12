@@ -3,6 +3,7 @@ var myGame = new Kiwi.Game();
 
 var elevatorsState = new Kiwi.State( ELEVATORS_STATE );
 
+elevatorsState.elevators = [];
 elevatorsState.people = [];
 
 elevatorsState.preload = function() {
@@ -51,6 +52,21 @@ elevatorsState.createPerson = function() {
 	this.people.push(character);
 }
 
+elevatorsState.createElevator = function() {
+	var character = new Kiwi.GameObjects.Sprite(
+		this, this.textures[ "characterSprite" ], 350, 0, true );
+
+	Kiwi.State.prototype.create.call( this );
+
+	character.animation.add(
+		"idleright", [ 0 ], 0.1, false );
+
+	character.facing = "right";
+	character.animation.play( "idleright" );
+	this.addChild(character);
+	this.people.push(character);
+}
+
 
 elevatorsState.update = function() {
 
@@ -61,7 +77,7 @@ elevatorsState.update = function() {
 		// console.log("people length: " + this.people.length);
 		// console.log(person);
 		if (person.y < 300) {
-			person.y += 3;
+			person.y += 1;
 		} else {
 			this.people.splice(i, 1);
 			person.destroy();
