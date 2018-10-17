@@ -1,4 +1,12 @@
+import Building from './model/building';
+
 const ELEVATORS_STATE = "elevatorsState";
+
+const NUMBER_OF_FLOORS = 10;
+
+var building = new Building(NUMBER_OF_FLOORS);
+
+
 var myGame = new Kiwi.Game();
 
 var elevatorsState = new Kiwi.State( ELEVATORS_STATE );
