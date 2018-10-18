@@ -1,6 +1,6 @@
-import Floor from './js/model/floor';
+import {Floor} from './floor.js';
 
-class Building {
+export class Building {
 
     constructor(number_of_floors) {
         this.floors = [];
@@ -11,5 +11,3 @@ class Building {
     }
 
 }
-
-module.exports = Building;

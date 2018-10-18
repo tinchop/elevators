@@ -1,4 +1,4 @@
-import Building from './model/building';
+import {Building} from './model/building.js';
 
 const ELEVATORS_STATE = "elevatorsState";
 
