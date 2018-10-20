@@ -1,30 +1,31 @@
 import {Building} from './model/building.js';
+import { ViewManager } from './view/view-manager.js';
 
-const ELEVATORS_STATE = "elevatorsState";
+const MAIN_STATE = "mainState";
 
-const NUMBER_OF_FLOORS = 10;
+var game = new Kiwi.Game();
+var mainState = new Kiwi.State( MAIN_STATE );
+var building = new Building();
+var viewManager = new ViewManager(building);
 
-var building = new Building(NUMBER_OF_FLOORS);
 
 
-var myGame = new Kiwi.Game();
 
-var elevatorsState = new Kiwi.State( ELEVATORS_STATE );
 
-elevatorsState.elevators = [];
-elevatorsState.people = [];
+mainState.elevators = [];
+mainState.people = [];
 
-elevatorsState.preload = function() {
+mainState.preload = function() {
 
 	Kiwi.State.prototype.preload.call(this);
-
+	this.addSpriteSheet( "elevatorSprite", "images/elevator.png", 200, 50 );
 	this.addSpriteSheet( "characterSprite", "images/character.png", 150, 117 );
 	this.addImage( "background", "images/jungle.png" );
 
 };
 
 
-elevatorsState.create = function(){
+mainState.create = function(){
 
 	Kiwi.State.prototype.create.call( this );
 
@@ -35,7 +36,7 @@ elevatorsState.create = function(){
 	this.createPerson();
 };
 
-elevatorsState.createPerson = function() {
+mainState.createPerson = function() {
 	var character = new Kiwi.GameObjects.Sprite(
 		this, this.textures[ "characterSprite" ], 350, 0, true );
 
@@ -60,26 +61,24 @@ elevatorsState.createPerson = function() {
 	this.people.push(character);
 }
 
-elevatorsState.createElevator = function() {
-	var character = new Kiwi.GameObjects.Sprite(
-		this, this.textures[ "characterSprite" ], 350, 0, true );
+mainState.createElevatorView = function() {
+	var elevatorView = new Kiwi.GameObjects.Sprite(this, this.textures[ "elevatorSprite" ], 350, 0, true );
 
 	Kiwi.State.prototype.create.call( this );
 
-	character.animation.add(
-		"idleright", [ 0 ], 0.1, false );
+	elevatorView.animation.add( "base", [ 0 ], 0.1, false );
 
-	character.facing = "right";
-	character.animation.play( "idleright" );
-	this.addChild(character);
-	this.people.push(character);
+	elevatorView.facing = "right";
+	elevatorView.animation.play( "base" );
+	this.addChild(elevatorView);
 }
 
 
-elevatorsState.update = function() {
+mainState.update = function() {
 
 	Kiwi.State.prototype.update.call( this );
 
+	building.update();
 	for (var i = 0; i < this.people.length; i++) {
 		var person = this.people[i];
 		// console.log("people length: " + this.people.length);
@@ -95,5 +94,5 @@ elevatorsState.update = function() {
 
 };
 
-myGame.states.addState(elevatorsState);
-myGame.states.switchState( ELEVATORS_STATE );
+game.states.addState(mainState);
+game.states.switchState( MAIN_STATE );

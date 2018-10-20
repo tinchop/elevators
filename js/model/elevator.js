@@ -1,11 +1,11 @@
 import {Person} from './person.js';
 
-export class Floor {
+export class Elevator {
 
     constructor(id, position) {
         this.id = id;
-        this.peopleWaiting = [];
         this.position = position;
+        this.people = [];
     }
 
 }
