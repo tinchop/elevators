@@ -35,6 +35,24 @@ export class ViewManager {
         elevatorView.animation.play( "base" );
         this.state.addChild(elevatorView);
         this.views.push(elevatorView);
+
+        if (elevator.people.length > 0) {
+            this.createPersonView(elevator.people[0]);
+        }
+    }
+
+    createPersonView(person) {
+        let personView = new Kiwi.GameObjects.Sprite(this.state, this.state.textures[ "personSprite" ], 350, 0, true );
+        personView.modelObject = person;
+
+        Kiwi.State.prototype.create.call( this.state );
+    
+        personView.animation.add( "base", [ 0 ], 0.1, false );
+    
+        personView.facing = "right";
+        personView.animation.play( "base" );
+        this.state.addChild(personView);
+        this.views.push(personView);
     }
 
     createFloorView(floor) {
@@ -49,6 +67,10 @@ export class ViewManager {
         floorView.animation.play( "base" );
         this.state.addChild(floorView);
         this.views.push(floorView);
+
+        let labelX = floor.id == 10 ? 192 : 202;
+        let floorLabel = new Kiwi.GameObjects.TextField(this.state, floor.id, labelX, floor.position.y + 8, "#000000"); 
+        this.state.addChild(floorLabel);
     }
 
 }
