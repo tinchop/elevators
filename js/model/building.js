@@ -12,13 +12,13 @@ export class Building {
         }
         this.elevators = [];
         this.elevators.push(new Elevator(1, new Position(400, 0)));
-        this.elevators.push(new Elevator(2, new Position(600, 300)));
-        this.elevators.push(new Elevator(3, new Position(800, 600)));
+        this.elevators.push(new Elevator(2, new Position(500, 300)));
+        this.elevators.push(new Elevator(3, new Position(600, 600)));
     }
 
 
     update() {
-        this.elevators[0].position.y += 2;
+        this.elevators[0].position.y += 1;
         this.elevators[1].position.y += 1;
         this.elevators[2].position.y -= 1;
     }
