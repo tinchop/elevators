@@ -12,6 +12,7 @@ export class ViewManager {
 
     _initViews() {
         this.building.getElevators().forEach(this.createElevatorView, this);
+        this.building.getFloors().forEach(this.createFloorView, this);
     }
 
 
@@ -34,6 +35,20 @@ export class ViewManager {
         elevatorView.animation.play( "base" );
         this.state.addChild(elevatorView);
         this.views.push(elevatorView);
+    }
+
+    createFloorView(floor) {
+        let floorView = new Kiwi.GameObjects.Sprite(this.state, this.state.textures[ "floorSprite" ], 350, 0, true );
+        floorView.modelObject = floor;
+
+        Kiwi.State.prototype.create.call( this.state );
+    
+        floorView.animation.add( "base", [ 0 ], 0.1, false );
+    
+        floorView.facing = "right";
+        floorView.animation.play( "base" );
+        this.state.addChild(floorView);
+        this.views.push(floorView);
     }
 
 }

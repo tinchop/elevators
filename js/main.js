@@ -12,6 +12,7 @@ mainState.preload = function() {
 
 	Kiwi.State.prototype.preload.call(this);
 	this.addSpriteSheet( "elevatorSprite", "images/elevator.png", 200, 50 );
+	this.addSpriteSheet( "floorSprite", "images/floor.png", 400, 50 );
 	this.addSpriteSheet( "characterSprite", "images/character.png", 150, 117 );
 	this.addImage( "background", "images/jungle.png" );
 

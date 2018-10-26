@@ -8,12 +8,12 @@ export class Building {
     constructor() {
         this.floors = [];
         for (let i = 0; i <= config.NUMBER_OF_FLOORS; i++) {
-            this.floors.push(new Floor(i, new Position(300, config.FLOOR_HEIGHT * i)));
+            this.floors.push(new Floor(i, new Position(0, config.FLOOR_HEIGHT * i)));
         }
         this.elevators = [];
-        this.elevators.push(new Elevator(1, new Position(100, 100)));
-        this.elevators.push(new Elevator(2, new Position(500, 400)));
-        this.elevators.push(new Elevator(3, new Position(900, 700)));
+        this.elevators.push(new Elevator(1, new Position(400, 0)));
+        this.elevators.push(new Elevator(2, new Position(600, 300)));
+        this.elevators.push(new Elevator(3, new Position(800, 600)));
     }
 
 
@@ -25,6 +25,10 @@ export class Building {
 
     getElevators() {
         return this.elevators;
+    }
+
+    getFloors() {
+        return this.floors;
     }
 
 }
