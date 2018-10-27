@@ -7,8 +7,8 @@ export class Elevator {
     constructor(id, position) {
         this.id = id;
         this.position = position;
-        this.people = [new Person(new Position(this.position.x + 20, this.position.y + 11))];
-        this.state = ELEVATOR_STATE_ENUM.GOING_DOWN;
+        this.state = ELEVATOR_STATE_ENUM.STILL;
+        this.people = [];
     }
 
     moveUp() {

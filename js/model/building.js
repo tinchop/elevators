@@ -11,9 +11,9 @@ export class Building {
             this.floors.push(new Floor(10 - i, new Position(0, config.FLOOR_HEIGHT * i)));
         }
         this.elevators = [];
-        this.elevators.push(new Elevator(1, new Position(400, 0)));
-        this.elevators.push(new Elevator(2, new Position(500, 150)));
-        this.elevators.push(new Elevator(3, new Position(600, 300)));
+        this.elevators.push(new Elevator(1, new Position(400, config.ENTRANCE_HALL_Y)));
+        this.elevators.push(new Elevator(2, new Position(500, config.ENTRANCE_HALL_Y)));
+        this.elevators.push(new Elevator(3, new Position(600, config.ENTRANCE_HALL_Y)));
     }
 
 

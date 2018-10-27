@@ -17,7 +17,7 @@ export class ViewManager {
 
 
     updateViews() {
-        this.views.forEach(function (view) {
+        this.views.forEach(view => {
             view.x = view.modelObject.position.x;
             view.y = view.modelObject.position.y;
         });
@@ -39,10 +39,6 @@ export class ViewManager {
         elevatorView.animation.play( "base" );
         this.state.addChild(elevatorView);
         this.views.push(elevatorView);
-
-        if (elevator.people.length > 0) {
-            this.createPersonView(elevator.people[0]);
-        }
     }
 
     createPersonView(person) {
