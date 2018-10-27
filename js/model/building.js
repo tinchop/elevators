@@ -21,6 +21,15 @@ export class Building {
         this.elevators.forEach(function (elevator) {
             elevator.moveDown();
         });
+        this.createPerson();
+    }
+
+    createPerson() {
+        let randomInt = (Math.floor(Math.random() * config.PERSON_CREATION_COEFFICIENT) + 1);
+        if (randomInt == config.PERSON_CREATION_COEFFICIENT) {
+            let randomFloorIndex = (Math.floor(Math.random() * config.NUMBER_OF_FLOORS));
+            this.floors[randomFloorIndex].createPerson();
+        }
     }
 
     getElevators() {

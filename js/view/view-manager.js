@@ -21,6 +21,10 @@ export class ViewManager {
             view.x = view.modelObject.position.x;
             view.y = view.modelObject.position.y;
         });
+        this.building.getFloors().forEach(floor => {
+            floor.getPeopleWaiting().forEach(this.createPersonView, this);
+        });
+
     }
 
     createElevatorView(elevator) {
@@ -42,18 +46,23 @@ export class ViewManager {
     }
 
     createPersonView(person) {
-        let spriteName = "personSprite" + (Math.floor(Math.random() * 8) + 1);
-        let personView = new Kiwi.GameObjects.Sprite(this.state, this.state.textures[ spriteName ], 350, 0, true );
-        personView.modelObject = person;
-
-        Kiwi.State.prototype.create.call( this.state );
+        if (person.justArrived) {
+            person.justArrived = false;
+            let spriteName = "personSprite" + (Math.floor(Math.random() * 8) + 1);
+            let personView = new Kiwi.GameObjects.Sprite(this.state, this.state.textures[ spriteName ], 350, 0, true );
+            personView.modelObject = person;
     
-        personView.animation.add( "base", [ 0 ], 0.1, false );
-    
-        personView.facing = "right";
-        personView.animation.play( "base" );
-        this.state.addChild(personView);
-        this.views.push(personView);
+            Kiwi.State.prototype.create.call( this.state );
+        
+            personView.animation.add( "base", [ 0 ], 0.1, false );
+        
+            personView.facing = "right";
+            personView.animation.play( "base" );
+            personView.x = person.position.x;
+            personView.y = person.position.y;
+            this.state.addChild(personView);
+            this.views.push(personView);
+        }
     }
 
     createFloorView(floor) {
