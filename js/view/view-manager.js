@@ -42,7 +42,8 @@ export class ViewManager {
     }
 
     createPersonView(person) {
-        let personView = new Kiwi.GameObjects.Sprite(this.state, this.state.textures[ "personSprite" ], 350, 0, true );
+        let spriteName = "personSprite" + (Math.floor(Math.random() * 8) + 1);
+        let personView = new Kiwi.GameObjects.Sprite(this.state, this.state.textures[ spriteName ], 350, 0, true );
         personView.modelObject = person;
 
         Kiwi.State.prototype.create.call( this.state );

@@ -4,7 +4,6 @@ import { ViewManager } from './view/view-manager.js';
 const MAIN_STATE = "mainState";
 
 var game = new Kiwi.Game();
-// game.cameras.defaultCamera.transform.scale = 0.9;
 var mainState = new Kiwi.State( MAIN_STATE );
 var building = new Building();
 var viewManager;
@@ -14,7 +13,9 @@ mainState.preload = function() {
 	Kiwi.State.prototype.preload.call(this);
 	this.addSpriteSheet( "elevatorSprite", "images/elevator.png", 100, 50 );
 	this.addSpriteSheet( "floorSprite", "images/floor.png", 400, 50 );
-	this.addSpriteSheet( "personSprite", "images/person.png", 20, 32 );
+	for (let i = 1; i < 9; i++) {
+		this.addSpriteSheet( "personSprite" + i, "images/person" + i + ".png", 20, 32 );
+	}
 	this.addImage( "background", "images/background.png" );
 
 };
