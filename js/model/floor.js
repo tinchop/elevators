@@ -18,4 +18,8 @@ export class Floor {
         }
     }
 
+    arePeopleWaiting() {
+        return this.peopleWaiting.length > 0;
+    }
+
 }

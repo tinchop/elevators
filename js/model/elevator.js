@@ -1,11 +1,11 @@
-import { ELEVATOR_STATE_ENUM, ENTRANCE_HALL_Y, TOP_FLOOR_Y } from '../config.js';
+import { ELEVATOR_STATE_ENUM, ENTRANCE_HALL_Y, TOP_FLOOR_Y, ELEVATOR_CAPACITY } from '../config.js';
 
 export class Elevator {
 
     constructor(id, position) {
         this.id = id;
         this.position = position;
-        this.state = ELEVATOR_STATE_ENUM.STILL;
+        this.state = ELEVATOR_STATE_ENUM.READY;
         this.people = [];
     }
 
@@ -14,10 +14,8 @@ export class Elevator {
             this.position.y -= 1;
             this.people.forEach(person => {
                 person.position.y -= 1;
-            })
-            this.state = ELEVATOR_STATE_ENUM.GOING_UP;
-        } else {
-            this.state = ELEVATOR_STATE_ENUM.STILL;
+            });
+            this.changeState(ELEVATOR_STATE_ENUM.GOING_UP);
         }
     }
 
@@ -26,11 +24,33 @@ export class Elevator {
             this.position.y += 1;
             this.people.forEach(person => {
                 person.position.y += 1;
-            })
-            this.state = ELEVATOR_STATE_ENUM.GOING_DOWN;
-        } else {
-            this.state = ELEVATOR_STATE_ENUM.STILL;
+            });
+            this.changeState(ELEVATOR_STATE_ENUM.GOING_DOWN);
         }
+    }
+
+    changeState(state) {
+        this.state = state;
+    }
+
+    isReady() {
+        return this.state === ELEVATOR_STATE_ENUM.READY;
+    }
+
+    isGoingUp() {
+        return this.state === ELEVATOR_STATE_ENUM.GOING_UP;
+    }
+
+    isGoingDown() {
+        return this.state === ELEVATOR_STATE_ENUM.GOING_DOWN;
+    }
+
+    isPickingUpPeople() {
+        return this.state === ELEVATOR_STATE_ENUM.PICKING_UP_PEOPLE;
+    }
+
+    isFull() {
+        return this.people.length === ELEVATOR_CAPACITY;
     }
 
 }
