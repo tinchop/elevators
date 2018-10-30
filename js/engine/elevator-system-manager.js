@@ -1,4 +1,4 @@
-import { ELEVATOR_CAPACITY } from '../config.js';
+import { ELEVATOR_CAPACITY, ELEVATOR_STATE_ENUM } from '../config.js';
 
 
 export class ElevatorSystemManager {
@@ -13,7 +13,20 @@ export class ElevatorSystemManager {
     }
 
     manage() {
-        this.building.elevators.forEach(this._moveElevatorToObjective, this);
+        this.building.elevators.forEach(elevator => {
+            if (!this._isElevatorInObjective(elevator)) {
+                this._moveElevatorToObjective(elevator);
+            } else {
+                let objective = this.elevatorsObjectives.get(elevator);
+                if (!elevator.isPickingUpPeople()) {
+                    elevator.changeState(ELEVATOR_STATE_ENUM.PICKING_UP_PEOPLE);
+                    // setTimeout(function(){ 
+                         
+                
+                    // }, 1000);
+                }
+            }
+        });
     }
 
     _isElevatorInObjective(elevator) {
@@ -29,7 +42,7 @@ export class ElevatorSystemManager {
         let room = ELEVATOR_CAPACITY - elevator.people.length;
         for (let i = 0; i < room; i++) {
             if (floor.arePeopleWaiting()) {
-                let person = floor.peopleWaiting.splice(-1, 1);
+                let person = floor.peopleWaiting.splice(-1, 1)[0];
                 elevator.people.push(person);
             }
         }
