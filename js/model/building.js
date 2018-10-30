@@ -7,7 +7,7 @@ export class Building {
 
     constructor() {
         this.floors = [];
-        for (let i = 0; i < config.NUMBER_OF_FLOORS; i++) {
+        for (let i = 0; i <= config.NUMBER_OF_FLOORS; i++) {
             this.floors.push(new Floor(10 - i, new Position(0, config.FLOOR_HEIGHT * i)));
         }
         this.elevators = [];
@@ -18,9 +18,6 @@ export class Building {
 
 
     update() {
-        this.elevators.forEach(function (elevator) {
-            elevator.moveDown();
-        });
         this.createPerson();
     }
 
@@ -32,12 +29,18 @@ export class Building {
         }
     }
 
-    getElevators() {
-        return this.elevators;
+    getFloorsRequestingElevators() {
+        let floorsRequestingElevators = [];
+        this.floors.forEach(floor => {
+            if (floor.peopleWaiting.length > 0) {
+                floorsRequestingElevators.push(floor);
+            }
+        });
+        return floorsRequestingElevators;
     }
 
-    getFloors() {
-        return this.floors;
+    getFloorById(id) {
+        return this.floors.find(floor => floor.id === id);
     }
 
 }

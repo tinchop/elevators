@@ -1,6 +1,4 @@
-import {Person} from './person.js';
-import { ELEVATOR_STATE_ENUM, TOP_FLOOR_Y, ENTRANCE_HALL_Y } from '../config.js';
-import { Position } from './position.js';
+import { ELEVATOR_STATE_ENUM, ENTRANCE_HALL_Y, TOP_FLOOR_Y } from '../config.js';
 
 export class Elevator {
 
