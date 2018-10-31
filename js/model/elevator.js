@@ -12,9 +12,7 @@ export class Elevator {
     moveUp() {
         if (this.position.y > TOP_FLOOR_Y) {
             this.position.y -= 1;
-            this.people.forEach(person => {
-                person.position.y -= 1;
-            });
+            this.people.forEach(person => person.position.y -= 1);
             this.changeState(ELEVATOR_STATE_ENUM.GOING_UP);
         }
     }
@@ -22,9 +20,7 @@ export class Elevator {
     moveDown() {
         if (this.position.y < ENTRANCE_HALL_Y) {
             this.position.y += 1;
-            this.people.forEach(person => {
-                person.position.y += 1;
-            });
+            this.people.forEach(person => person.position.y += 1);
             this.changeState(ELEVATOR_STATE_ENUM.GOING_DOWN);
         }
     }
@@ -51,6 +47,14 @@ export class Elevator {
 
     isFull() {
         return this.people.length === ELEVATOR_CAPACITY;
+    }
+
+    isEmpty() {
+        return this.people.length === 0;
+    }
+
+    isWaitingForPeopleToLeave() {
+        return this.state === ELEVATOR_STATE_ENUM.WAITING_FOR_PEOPLE_TO_LEAVE;
     }
 
 }

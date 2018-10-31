@@ -18,6 +18,15 @@ export class Floor {
         }
     }
 
+    reorderPeopleWaiting() {
+        if (this.arePeopleWaiting()) {
+            for (let i = 0; i < this.peopleWaiting.length; i++) {
+                let person = this.peopleWaiting[i];
+                person.position.x = 400 - (i + 1) * PEOPLE_DISTANCE_IN_LINE;
+            }
+        }
+    }
+
     arePeopleWaiting() {
         return this.peopleWaiting.length > 0;
     }

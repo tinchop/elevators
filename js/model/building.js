@@ -1,4 +1,4 @@
-import {Floor} from './floor.js';
+import { Floor } from './floor.js';
 import * as config from './../config.js';
 import { Elevator } from './elevator.js';
 import { Position } from './position.js';
@@ -37,6 +37,29 @@ export class Building {
             }
         });
         return floorsRequestingElevators;
+    }
+
+    getClosestFloorRequestingElevatorsBelowFloor(floorId) {
+        let floorsRequestingElevators = [];
+        this.floors.forEach(floor => {
+            if (floor.peopleWaiting.length > 0 && floorId > floor.id) {
+                floorsRequestingElevators.push(floor);
+            }
+        });
+        if (floorsRequestingElevators.length === 0) {
+            return null;
+        }
+        floorsRequestingElevators.sort((a, b) => b.id - a.id);
+        return floorsRequestingElevators[0];
+    }
+
+    getHighestFloorRequestingElevators() {
+        let floorsRequestingElevators = this.getFloorsRequestingElevators();
+        if (floorsRequestingElevators.length === 0) {
+            return null;
+        }
+        floorsRequestingElevators.sort((a, b) => b.id - a.id);
+        return floorsRequestingElevators[0];
     }
 
     getFloorById(id) {
