@@ -29,20 +29,20 @@ export class Building {
         }
     }
 
-    getFloorsRequestingElevators() {
+    getFloorsRequestingElevators(idsToExclude) {
         let floorsRequestingElevators = [];
         this.floors.forEach(floor => {
-            if (floor.peopleWaiting.length > 0) {
+            if (floor.peopleWaiting.length > 0 && (!idsToExclude || !idsToExclude.includes(floor.id))) {
                 floorsRequestingElevators.push(floor);
             }
         });
         return floorsRequestingElevators;
     }
 
-    getClosestFloorRequestingElevatorsBelowFloor(floorId) {
+    getClosestFloorRequestingElevatorsBelowFloor(floorId, idsToExclude) {
         let floorsRequestingElevators = [];
         this.floors.forEach(floor => {
-            if (floor.peopleWaiting.length > 0 && floorId > floor.id) {
+            if (floor.peopleWaiting.length > 0 && floorId > floor.id && !idsToExclude.includes(floor.id)) {
                 floorsRequestingElevators.push(floor);
             }
         });
@@ -53,12 +53,13 @@ export class Building {
         return floorsRequestingElevators[0];
     }
 
-    getHighestFloorRequestingElevators() {
-        let floorsRequestingElevators = this.getFloorsRequestingElevators();
+    getHighestFloorRequestingElevators(idsToExclude) {
+        let floorsRequestingElevators = this.getFloorsRequestingElevators(idsToExclude);
         if (floorsRequestingElevators.length === 0) {
             return null;
         }
         floorsRequestingElevators.sort((a, b) => b.id - a.id);
+        console.log('highest floor requesting elevator ', floorsRequestingElevators[0].id);
         return floorsRequestingElevators[0];
     }
 

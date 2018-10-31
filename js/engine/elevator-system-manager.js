@@ -1,4 +1,4 @@
-import { ELEVATOR_CAPACITY, ELEVATOR_STATE_ENUM, PEOPLE_DISTANCE_IN_LINE, ENTRANCE_HALL_Y } from '../config.js';
+import { ELEVATOR_CAPACITY, ELEVATOR_STATE_ENUM, PEOPLE_DISTANCE_IN_LINE } from '../config.js';
 
 
 export class ElevatorSystemManager {
@@ -6,11 +6,10 @@ export class ElevatorSystemManager {
     constructor(building) {
         this.building = building;
         this.elevatorsObjectives = new Map();
-        
+
         this.building.elevators.forEach(elevator => {
-            this._setElevatorObjective(elevator, this.building.getFloorById(5));
+            this._setElevatorObjective(elevator, this.building.getFloorById(0));
         });
-        this._setElevatorObjective(this.building.elevators[0], this.building.getFloorById(9));
 
     }
 
@@ -28,8 +27,11 @@ export class ElevatorSystemManager {
                     setTimeout(this._doPickUpPeople, 1000, elevator, objective, this);
                 } else if (elevator.isReady()) {
                     this._doMoveToNextObjective(elevator, this);
+                } else if (objective.id === 0 && elevator.isEmpty()) {
+                    elevator.changeState(ELEVATOR_STATE_ENUM.READY);
                 }
             }
+            console.log('current objectives ids ', this._currentObjectivesIds());
         });
     }
 
@@ -41,7 +43,7 @@ export class ElevatorSystemManager {
         elevator.people = [];
         setTimeout(dis._doMoveToNextObjective, 1000, elevator, dis);
     }
-    
+
     _doPickUpPeople(elevator, floor, dis) {
         let room = ELEVATOR_CAPACITY - elevator.people.length;
         for (let i = 0; i < room; i++) {
@@ -53,25 +55,32 @@ export class ElevatorSystemManager {
         floor.reorderPeopleWaiting();
         for (let i = 0; i < elevator.people.length; i++) {
             let person = elevator.people[i];
-            person.position.x = elevator.position.x + 10 + i*PEOPLE_DISTANCE_IN_LINE;
+            person.position.x = elevator.position.x + 10 + i * PEOPLE_DISTANCE_IN_LINE;
         }
         setTimeout(dis._doMoveToNextObjective, 1000, elevator, dis);
     }
 
     _doMoveToNextObjective(elevator, dis) {
-        elevator.changeState(ELEVATOR_STATE_ENUM.READY);
-        if (elevator.isFull()) {
-            dis._setElevatorObjective(elevator, dis.building.getFloorById(0));
-        } else if (elevator.position.y < ENTRANCE_HALL_Y){
+        if (dis._isElevatorInObjective(elevator)) {
+            let floorIdsToExclude = dis._currentObjectivesIds();
             let objective = dis.elevatorsObjectives.get(elevator);
-            let floor = dis.building.getClosestFloorRequestingElevatorsBelowFloor(objective.id);
-            dis._setElevatorObjective(elevator, floor ? floor : dis.building.getFloorById(0));
-        } else {
-            let floor = dis.building.getHighestFloorRequestingElevators();
-            if (floor) {
-                dis._setElevatorObjective(elevator, floor);
+            if (elevator.isFull()) {
+                dis._setElevatorObjective(elevator, dis.building.getFloorById(0));
+            } else if (objective.id != 0) {
+                let floor = dis.building.getClosestFloorRequestingElevatorsBelowFloor(objective.id, floorIdsToExclude);
+                dis._setElevatorObjective(elevator, floor ? floor : dis.building.getFloorById(0));
+            } else {
+                let floor = dis.building.getHighestFloorRequestingElevators(floorIdsToExclude);
+                if (floor) {
+                    dis._setElevatorObjective(elevator, floor);
+                }
             }
+            elevator.changeState(ELEVATOR_STATE_ENUM.READY);
         }
+    }
+
+    _currentObjectivesIds() {
+        return Array.from(this.elevatorsObjectives.values()).map(objective => objective.id);
     }
 
     _isElevatorInObjective(elevator) {
