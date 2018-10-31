@@ -1,6 +1,6 @@
-import { Floor } from './floor.js';
 import * as config from './../config.js';
 import { Elevator } from './elevator.js';
+import { Floor } from './floor.js';
 import { Position } from './position.js';
 
 export class Building {
@@ -39,10 +39,19 @@ export class Building {
         return floorsRequestingElevators;
     }
 
+    getRandomFloorRequestingElevator() {
+        let floorsRequestingElevator = this.getFloorsRequestingElevators();
+        if (floorsRequestingElevator.length > 0) {
+            return floorsRequestingElevator[(Math.floor(Math.random() * floorsRequestingElevator.length))];
+        } else {
+            return null;
+        }
+    }
+
     getClosestFloorRequestingElevatorsBelowFloor(floorId, idsToExclude) {
         let floorsRequestingElevators = [];
         this.floors.forEach(floor => {
-            if (floor.peopleWaiting.length > 0 && floorId > floor.id && !idsToExclude.includes(floor.id)) {
+            if (floor.peopleWaiting.length > 0 && (floorId > floor.id || floorId + config.GO_BACKWARDS_THRESHOLD == floor.id) && !idsToExclude.includes(floor.id)) {
                 floorsRequestingElevators.push(floor);
             }
         });
@@ -53,13 +62,31 @@ export class Building {
         return floorsRequestingElevators[0];
     }
 
+    getClosestFloorRequestingElevatorsBelowFloorWithoutThreshold(floorId) {
+        let floorsRequestingElevators = [];
+        this.floors.forEach(floor => {
+            if (floor.peopleWaiting.length > 0 && (floorId > floor.id)) {
+                floorsRequestingElevators.push(floor);
+            }
+        });
+        if (floorsRequestingElevators.length === 0) {
+            return null;
+        }
+        floorsRequestingElevators.sort((a, b) => b.id - a.id);
+        return floorsRequestingElevators[0];
+    }
+
+    getFloorIdByY(y) {
+        return 10 - Math.floor(y / config.FLOOR_HEIGHT);
+    }
+
     getHighestFloorRequestingElevators(idsToExclude) {
         let floorsRequestingElevators = this.getFloorsRequestingElevators(idsToExclude);
         if (floorsRequestingElevators.length === 0) {
             return null;
         }
         floorsRequestingElevators.sort((a, b) => b.id - a.id);
-        console.log('highest floor requesting elevator ', floorsRequestingElevators[0].id);
+        //console.log('highest floor requesting elevator ', floorsRequestingElevators[0].id);
         return floorsRequestingElevators[0];
     }
 

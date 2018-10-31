@@ -1,13 +1,20 @@
 import { Building } from './model/building.js';
 import { ViewManager } from './view/view-manager.js';
 import { ElevatorSystemManager } from './engine/elevator-system-manager.js';
+import { InefficientElevatorSystemManager } from './engine/inefficient-elevator-system-manager.js';
+import { USE_INEFFICIENT_MANAGER } from './config.js';
 
 const MAIN_STATE = "mainState";
 
 let game = new Kiwi.Game();
 let mainState = new Kiwi.State(MAIN_STATE);
 let building = new Building();
-let esm = new ElevatorSystemManager(building);
+let em;
+if (USE_INEFFICIENT_MANAGER) {
+	em = new InefficientElevatorSystemManager(building);
+} else {
+	em = new ElevatorSystemManager(building);
+}
 let viewManager;
 
 mainState.preload = function () {
@@ -41,7 +48,7 @@ mainState.update = function () {
 	Kiwi.State.prototype.update.call(this);
 
 	building.update();
-	esm.manage();
+	em.manage();
 	viewManager.updateViews();
 
 };

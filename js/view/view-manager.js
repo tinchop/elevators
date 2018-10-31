@@ -20,6 +20,10 @@ export class ViewManager {
             view.x = view.modelObject.position.x;
             view.y = view.modelObject.position.y;
         });
+        this.views = this.views.filter(view => view.modelObject.position.x >= 0);
+        this.building.floors.forEach(floor => {
+            floor.peopleWaiting.forEach(this.createPersonView, this);
+        });
         this.building.floors.forEach(floor => {
             floor.peopleWaiting.forEach(this.createPersonView, this);
         });

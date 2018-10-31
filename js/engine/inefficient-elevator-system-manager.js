@@ -1,7 +1,7 @@
-import { ELEVATOR_CAPACITY, ELEVATOR_STATE_ENUM, PEOPLE_DISTANCE_IN_LINE } from '../config.js';
+import { ELEVATOR_CAPACITY, ELEVATOR_STATE_ENUM, PEOPLE_DISTANCE_IN_LINE } from './../config.js';
 
 
-export class ElevatorSystemManager {
+export class InefficientElevatorSystemManager {
 
     constructor(building) {
         this.building = building;
@@ -16,42 +16,23 @@ export class ElevatorSystemManager {
     manage() {
         this.building.elevators.forEach(elevator => {
             if (!this._isElevatorInObjective(elevator)) {
-                this._searchForBetterObjective(elevator);
                 this._moveElevatorToObjective(elevator);
             } else {
                 let objective = this.elevatorsObjectives.get(elevator);
-                if (objective.id === 0 && !elevator.isEmpty() && !elevator.isWaitingForPeopleToLeave()) {
+                // if (objective.id === 0 && !elevator.isEmpty() && !elevator.isWaitingForPeopleToLeave()) {
+                    if (objective.id === 0 && !elevator.isWaitingForPeopleToLeave()) {
                     elevator.changeState(ELEVATOR_STATE_ENUM.WAITING_FOR_PEOPLE_TO_LEAVE);
                     setTimeout(this._waitForPeopleToLeave, 1000, elevator, this);
-                } else if (objective.id != 0 && !elevator.isPickingUpPeople() && !elevator.isFull()) {
+                } else if (objective.id != 0 && !elevator.isPickingUpPeople())  {
                     elevator.changeState(ELEVATOR_STATE_ENUM.PICKING_UP_PEOPLE);
                     setTimeout(this._doPickUpPeople, 1000, elevator, objective, this);
-                } else if (elevator.isReady()) {
-                    this._doMoveToNextObjective(elevator, this);
                 } 
+                // else if (elevator.isReady() || (objective.id === 0 && elevator.isEmpty())) {
+                //     this._doMoveToNextObjective(elevator, this);
+                // } 
             }
             //console.log('current objectives ids ', this._currentObjectivesIds());
         });
-    }
-
-    _searchForBetterObjective(elevator) {
-        if (elevator.isFull()) {
-            return;
-        } else {
-            let objective = this.elevatorsObjectives.get(elevator);
-            let objectiveIdsToExclude = this._currentObjectivesIds();
-            if (elevator.isGoingUp()) {
-                let highest = this.building.getHighestFloorRequestingElevators(objectiveIdsToExclude);
-                if (highest && highest.id > objective.id) {
-                    this._setElevatorObjective(elevator, highest);
-                }
-            } else if (elevator.isGoingDown()) {
-                let better = this.building.getClosestFloorRequestingElevatorsBelowFloor(this.building.getFloorIdByY(elevator.position.y), objectiveIdsToExclude);
-                if (better) {
-                    this._setElevatorObjective(elevator, better);
-                }
-            }
-        }
     }
 
     _waitForPeopleToLeave(elevator, dis) {
@@ -81,15 +62,12 @@ export class ElevatorSystemManager {
 
     _doMoveToNextObjective(elevator, dis) {
         if (dis._isElevatorInObjective(elevator)) {
-            let floorIdsToExclude = dis._currentObjectivesIds();
             let objective = dis.elevatorsObjectives.get(elevator);
-            if (elevator.isFull()) {
-                dis._setElevatorObjective(elevator, dis.building.getFloorById(0));
-            } else if (objective.id != 0) {
-                let floor = dis.building.getClosestFloorRequestingElevatorsBelowFloor(objective.id, floorIdsToExclude);
+            if (objective.id != 0) {
+                let floor = dis.building.getClosestFloorRequestingElevatorsBelowFloorWithoutThreshold(objective.id);
                 dis._setElevatorObjective(elevator, floor ? floor : dis.building.getFloorById(0));
             } else {
-                let floor = dis.building.getHighestFloorRequestingElevators(floorIdsToExclude);
+                let floor = dis.building.getRandomFloorRequestingElevator();
                 if (floor) {
                     dis._setElevatorObjective(elevator, floor);
                 }
