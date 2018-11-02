@@ -45,6 +45,14 @@ mainState.create = function () {
 
 let logCount = 0;
 
+function downloadStats() {
+	var atag = document.createElement("a");
+	var file = new Blob(['lalalalala'], {type: 'text/plain'});
+	atag.href = URL.createObjectURL(file);
+	atag.download = 'stats.txt';
+	atag.click();
+}
+
 mainState.update = function () {
 
 	Kiwi.State.prototype.update.call(this);
