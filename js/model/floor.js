@@ -1,6 +1,7 @@
 import { MAX_PEOPLE_WAITING, PEOPLE_DISTANCE_IN_LINE } from '../config.js';
 import { Person } from './person.js';
 import { Position } from './position.js';
+import { stats } from '../stats/stats.js';
 
 export class Floor {
 
@@ -13,8 +14,9 @@ export class Floor {
     createPerson() {
         if (this.peopleWaiting.length < MAX_PEOPLE_WAITING) {
             let position = new Position(400 - ((this.peopleWaiting.length + 1) * PEOPLE_DISTANCE_IN_LINE), this.position.y + 10);
-            let person = new Person(position);
+            let person = new Person(position, this.id);
             this.peopleWaiting.push(person);
+            stats.updatePeopleCreated(this.id);
         }
     }
 

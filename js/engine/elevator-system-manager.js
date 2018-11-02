@@ -1,4 +1,5 @@
 import { ELEVATOR_CAPACITY, ELEVATOR_STATE_ENUM, PEOPLE_DISTANCE_IN_LINE } from '../config.js';
+import { stats } from '../stats/stats.js';
 
 
 export class ElevatorSystemManager {
@@ -30,7 +31,6 @@ export class ElevatorSystemManager {
                     this._doMoveToNextObjective(elevator, this);
                 } 
             }
-            //console.log('current objectives ids ', this._currentObjectivesIds());
         });
     }
 
@@ -56,6 +56,7 @@ export class ElevatorSystemManager {
 
     _waitForPeopleToLeave(elevator, dis) {
         elevator.people.forEach(person => {
+            stats.updateTimeInSystem(person);
             person.leftBuilding = true;
             person.position.x = -100;
         });

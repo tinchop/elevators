@@ -2,7 +2,8 @@ import { Building } from './model/building.js';
 import { ViewManager } from './view/view-manager.js';
 import { ElevatorSystemManager } from './engine/elevator-system-manager.js';
 import { InefficientElevatorSystemManager } from './engine/inefficient-elevator-system-manager.js';
-import { USE_INEFFICIENT_MANAGER } from './config.js';
+import { USE_INEFFICIENT_MANAGER, LOG_COUNT } from './config.js';
+import { stats } from './stats/stats.js';
 
 const MAIN_STATE = "mainState";
 
@@ -42,6 +43,7 @@ mainState.create = function () {
 
 };
 
+let logCount = 0;
 
 mainState.update = function () {
 
@@ -50,6 +52,11 @@ mainState.update = function () {
 	building.update();
 	em.manage();
 	viewManager.updateViews();
+	logCount++;
+	if (logCount == LOG_COUNT) {
+		stats.log();
+		logCount = 0;
+	}
 
 };
 

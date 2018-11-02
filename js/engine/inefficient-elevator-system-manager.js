@@ -1,5 +1,5 @@
 import { ELEVATOR_CAPACITY, ELEVATOR_STATE_ENUM, PEOPLE_DISTANCE_IN_LINE } from './../config.js';
-
+import { stats } from '../stats/stats.js';
 
 export class InefficientElevatorSystemManager {
 
@@ -19,24 +19,20 @@ export class InefficientElevatorSystemManager {
                 this._moveElevatorToObjective(elevator);
             } else {
                 let objective = this.elevatorsObjectives.get(elevator);
-                // if (objective.id === 0 && !elevator.isEmpty() && !elevator.isWaitingForPeopleToLeave()) {
-                    if (objective.id === 0 && !elevator.isWaitingForPeopleToLeave()) {
+                if (objective.id === 0 && !elevator.isWaitingForPeopleToLeave()) {
                     elevator.changeState(ELEVATOR_STATE_ENUM.WAITING_FOR_PEOPLE_TO_LEAVE);
                     setTimeout(this._waitForPeopleToLeave, 1000, elevator, this);
                 } else if (objective.id != 0 && !elevator.isPickingUpPeople())  {
                     elevator.changeState(ELEVATOR_STATE_ENUM.PICKING_UP_PEOPLE);
                     setTimeout(this._doPickUpPeople, 1000, elevator, objective, this);
                 } 
-                // else if (elevator.isReady() || (objective.id === 0 && elevator.isEmpty())) {
-                //     this._doMoveToNextObjective(elevator, this);
-                // } 
             }
-            //console.log('current objectives ids ', this._currentObjectivesIds());
         });
     }
 
     _waitForPeopleToLeave(elevator, dis) {
         elevator.people.forEach(person => {
+            stats.updateTimeInSystem(person);
             person.leftBuilding = true;
             person.position.x = -100;
         });
