@@ -8,5 +8,4 @@ export const PERSON_CREATION_COEFFICIENT = 150;
 export const PEOPLE_DISTANCE_IN_LINE = 30;
 export const ELEVATOR_CAPACITY = 3;
 export const GO_BACKWARDS_THRESHOLD = 1;
-export const USE_INEFFICIENT_MANAGER = false;
-export const LOG_COUNT = 100;
+export const USE_INEFFICIENT_MANAGER = true;

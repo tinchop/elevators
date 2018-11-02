@@ -1,9 +1,9 @@
-import { Building } from './model/building.js';
-import { ViewManager } from './view/view-manager.js';
+import { USE_INEFFICIENT_MANAGER } from './config.js';
 import { ElevatorSystemManager } from './engine/elevator-system-manager.js';
 import { InefficientElevatorSystemManager } from './engine/inefficient-elevator-system-manager.js';
-import { USE_INEFFICIENT_MANAGER, LOG_COUNT } from './config.js';
+import { Building } from './model/building.js';
 import { stats } from './stats/stats.js';
+import { ViewManager } from './view/view-manager.js';
 
 const MAIN_STATE = "mainState";
 
@@ -41,16 +41,26 @@ mainState.create = function () {
 
 	viewManager = new ViewManager(building, this);
 
+	this.downloadKey = this.game.input.keyboard.addKey( Kiwi.Input.Keycodes.D );
+
 };
 
-let logCount = 0;
+let downloadStart = new Date();
 
 function downloadStats() {
-	var atag = document.createElement("a");
-	var file = new Blob(['lalalalala'], {type: 'text/plain'});
-	atag.href = URL.createObjectURL(file);
-	atag.download = 'stats.txt';
-	atag.click();
+
+	let now = new Date();
+	let elapsedTime = now - downloadStart;
+	elapsedTime /= 1000;
+	if (elapsedTime > 1) {
+		var atag = document.createElement("a");
+		var file = new Blob([stats.log()], {type: 'text/plain'});
+		atag.href = URL.createObjectURL(file);
+		atag.download = USE_INEFFICIENT_MANAGER ? 'inefficient_stats_' + now.getTime() + '.txt' : 'stats_' + now.getTime() + '.txt';
+		atag.click();
+		downloadStart = new Date();
+	}
+
 }
 
 mainState.update = function () {
@@ -60,11 +70,10 @@ mainState.update = function () {
 	building.update();
 	em.manage();
 	viewManager.updateViews();
-	logCount++;
-	if (logCount == LOG_COUNT) {
-		stats.log();
-		logCount = 0;
-	}
+
+	if ( this.downloadKey.isDown ) {
+		downloadStats();
+    }
 
 };
 

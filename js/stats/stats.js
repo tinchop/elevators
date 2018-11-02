@@ -51,8 +51,16 @@ class Stats {
         let now = new Date();
         let elapsedTime = now - this.startTime;
         elapsedTime /= 1000;
-        console.log('Elapsed time: ', elapsedTime);
-        console.log(this.floorStats);
+        let log = 'Elapsed time: ' + elapsedTime + '\n';
+        this.floorStats.forEach(floor => {
+            log += 'Floor: ' + floor.id + ', ';
+            log += 'Avg time: ' + floor.avgTime + ', ';
+            log += 'Min time: ' + floor.minTime + ', ';
+            log += 'Max time: ' + floor.maxTime + ', ';
+            log += 'People created: ' + floor.peopleCreated + ', ';
+            log += 'People that left: ' + floor.peopleThatLeft + '\n';
+        });
+        return log;
     }
 
 }
