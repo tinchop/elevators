@@ -1,4 +1,4 @@
-import { NUMBER_OF_FLOORS } from '../config.js';
+import { NUMBER_OF_FLOORS, ELEVATOR_SPEED } from '../config.js';
 
 
 class FloorStats {
@@ -47,18 +47,32 @@ class Stats {
         floorStats.avgTime = floorStats.totalTime / floorStats.peopleThatLeft;
     }
 
+    _pad(width, string, padding) { 
+        return (width <= string.length) ? string : this._pad(width, padding + string, padding)
+    }
+
     log() {
         let now = new Date();
         let elapsedTime = now - this.startTime;
         elapsedTime /= 1000;
-        let log = 'Elapsed time: ' + elapsedTime + '\n';
+        let log = '  Elapsed time: ' + elapsedTime * ELEVATOR_SPEED + '\n';
+        log += '\n';
+        log += this._pad(10, 'Floor N°', ' ');
+        log += this._pad(10, 'Avg time', ' ');
+        log += this._pad(10, 'Min time', ' ');
+        log += this._pad(10, 'Max time', ' ');
+        log += this._pad(10, 'Ppl crtd', ' ');
+        log += this._pad(10, 'Ppl left', ' ');
+        log += '\n';
+        log += '\n';
         this.floorStats.forEach(floor => {
-            log += 'Floor: ' + floor.id + ', ';
-            log += 'Avg time: ' + floor.avgTime + ', ';
-            log += 'Min time: ' + floor.minTime + ', ';
-            log += 'Max time: ' + floor.maxTime + ', ';
-            log += 'People created: ' + floor.peopleCreated + ', ';
-            log += 'People that left: ' + floor.peopleThatLeft + '\n';
+            log += this._pad(10, floor.id, ' ');
+            log += this._pad(10, parseFloat(floor.avgTime * ELEVATOR_SPEED).toFixed(2), ' ');
+            log += this._pad(10, parseFloat(floor.minTime * ELEVATOR_SPEED).toFixed(2), ' ');
+            log += this._pad(10, parseFloat(floor.maxTime * ELEVATOR_SPEED).toFixed(2), ' ');
+            log += this._pad(10, floor.peopleCreated, ' ');
+            log += this._pad(10, floor.peopleThatLeft, ' ');
+            log += '\n';
         });
         return log;
     }

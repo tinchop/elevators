@@ -48,10 +48,10 @@ export class Building {
         }
     }
 
-    getClosestFloorRequestingElevatorsBelowFloor(floorId, idsToExclude) {
+    getClosestFloorRequestingElevatorsBelowFloor(floorId, idsToExclude, useThreshold) {
         let floorsRequestingElevators = [];
         this.floors.forEach(floor => {
-            if (floor.peopleWaiting.length > 0 && (floorId > floor.id || floorId + config.GO_BACKWARDS_THRESHOLD == floor.id) && !idsToExclude.includes(floor.id)) {
+            if (floor.peopleWaiting.length > 0 && (floorId > floor.id || (useThreshold && floorId + config.GO_BACKWARDS_THRESHOLD == floor.id)) && !idsToExclude.includes(floor.id)) {
                 floorsRequestingElevators.push(floor);
             }
         });
@@ -86,7 +86,6 @@ export class Building {
             return null;
         }
         floorsRequestingElevators.sort((a, b) => b.id - a.id);
-        //console.log('highest floor requesting elevator ', floorsRequestingElevators[0].id);
         return floorsRequestingElevators[0];
     }
 

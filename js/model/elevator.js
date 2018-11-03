@@ -1,4 +1,4 @@
-import { ELEVATOR_STATE_ENUM, ENTRANCE_HALL_Y, TOP_FLOOR_Y, ELEVATOR_CAPACITY } from '../config.js';
+import { ELEVATOR_STATE_ENUM, ENTRANCE_HALL_Y, TOP_FLOOR_Y, ELEVATOR_CAPACITY, ELEVATOR_SPEED } from '../config.js';
 
 export class Elevator {
 
@@ -11,16 +11,16 @@ export class Elevator {
 
     moveUp() {
         if (this.position.y > TOP_FLOOR_Y) {
-            this.position.y -= 1;
-            this.people.forEach(person => person.position.y -= 1);
+            this.position.y -= ELEVATOR_SPEED;
+            this.people.forEach(person => person.position.y -= ELEVATOR_SPEED);
             this.changeState(ELEVATOR_STATE_ENUM.GOING_UP);
         }
     }
 
     moveDown() {
         if (this.position.y < ENTRANCE_HALL_Y) {
-            this.position.y += 1;
-            this.people.forEach(person => person.position.y += 1);
+            this.position.y += ELEVATOR_SPEED;
+            this.people.forEach(person => person.position.y += ELEVATOR_SPEED);
             this.changeState(ELEVATOR_STATE_ENUM.GOING_DOWN);
         }
     }

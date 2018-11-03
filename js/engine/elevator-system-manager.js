@@ -1,4 +1,4 @@
-import { ELEVATOR_CAPACITY, ELEVATOR_STATE_ENUM, PEOPLE_DISTANCE_IN_LINE } from '../config.js';
+import { ELEVATOR_CAPACITY, ELEVATOR_STATE_ENUM, PEOPLE_DISTANCE_IN_LINE, ELEVATOR_WAITING_TIME } from '../config.js';
 import { stats } from '../stats/stats.js';
 
 
@@ -23,10 +23,10 @@ export class ElevatorSystemManager {
                 let objective = this.elevatorsObjectives.get(elevator);
                 if (objective.id === 0 && !elevator.isEmpty() && !elevator.isWaitingForPeopleToLeave()) {
                     elevator.changeState(ELEVATOR_STATE_ENUM.WAITING_FOR_PEOPLE_TO_LEAVE);
-                    setTimeout(this._waitForPeopleToLeave, 1000, elevator, this);
+                    setTimeout(this._waitForPeopleToLeave, ELEVATOR_WAITING_TIME, elevator, this);
                 } else if (objective.id != 0 && !elevator.isPickingUpPeople() && !elevator.isFull()) {
                     elevator.changeState(ELEVATOR_STATE_ENUM.PICKING_UP_PEOPLE);
-                    setTimeout(this._doPickUpPeople, 1000, elevator, objective, this);
+                    setTimeout(this._doPickUpPeople, ELEVATOR_WAITING_TIME, elevator, objective, this);
                 } else if (elevator.isReady()) {
                     this._doMoveToNextObjective(elevator, this);
                 } 
@@ -46,7 +46,7 @@ export class ElevatorSystemManager {
                     this._setElevatorObjective(elevator, highest);
                 }
             } else if (elevator.isGoingDown()) {
-                let better = this.building.getClosestFloorRequestingElevatorsBelowFloor(this.building.getFloorIdByY(elevator.position.y), objectiveIdsToExclude);
+                let better = this.building.getClosestFloorRequestingElevatorsBelowFloor(this.building.getFloorIdByY(elevator.position.y), objectiveIdsToExclude, elevator.people.length < 2);
                 if (better) {
                     this._setElevatorObjective(elevator, better);
                 }
@@ -61,7 +61,7 @@ export class ElevatorSystemManager {
             person.position.x = -100;
         });
         elevator.people = [];
-        setTimeout(dis._doMoveToNextObjective, 1000, elevator, dis);
+        setTimeout(dis._doMoveToNextObjective, ELEVATOR_WAITING_TIME, elevator, dis);
     }
 
     _doPickUpPeople(elevator, floor, dis) {
@@ -77,7 +77,7 @@ export class ElevatorSystemManager {
             let person = elevator.people[i];
             person.position.x = elevator.position.x + 10 + i * PEOPLE_DISTANCE_IN_LINE;
         }
-        setTimeout(dis._doMoveToNextObjective, 1000, elevator, dis);
+        setTimeout(dis._doMoveToNextObjective, ELEVATOR_WAITING_TIME, elevator, dis);
     }
 
     _doMoveToNextObjective(elevator, dis) {
