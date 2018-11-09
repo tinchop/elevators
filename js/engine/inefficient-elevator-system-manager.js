@@ -32,7 +32,7 @@ export class InefficientElevatorSystemManager {
 
     _waitForPeopleToLeave(elevator, dis) {
         elevator.people.forEach(person => {
-            stats.updateTimeInSystem(person);
+            stats.updateTimeInSystem(person, false);
             person.leftBuilding = true;
             person.position.x = -100;
         });
@@ -51,7 +51,7 @@ export class InefficientElevatorSystemManager {
         floor.reorderPeopleWaiting();
         for (let i = 0; i < elevator.people.length; i++) {
             let person = elevator.people[i];
-            person.position.x = elevator.position.x + 10 + i * PEOPLE_DISTANCE_IN_LINE;
+            person.position.x = elevator.position.x + 13 + i * PEOPLE_DISTANCE_IN_LINE;
         }
         setTimeout(dis._doMoveToNextObjective, ELEVATOR_WAITING_TIME, elevator, dis);
     }

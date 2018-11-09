@@ -1,17 +1,20 @@
-import { MAX_PEOPLE_WAITING } from '../config.js';
+import { PEOPLE_SPRITES_COUNT } from '../config.js';
 
 export class ViewManager {
 
-    constructor(building, state) {
-        this.building = building;
+    constructor(inefficientBuilding, efficientBuilding, state) {
+        this.inefficientBuilding = inefficientBuilding;
+        this.efficientBuilding = efficientBuilding;
         this.state = state;
         this.views = [];
         this._initViews();
     }
 
     _initViews() {
-        this.building.elevators.forEach(this.createElevatorView, this);
-        this.building.floors.forEach(this.createFloorView, this);
+        this.inefficientBuilding.elevators.forEach(this.createElevatorView, this);
+        this.inefficientBuilding.floors.forEach(this.createFloorView, this);
+        this.efficientBuilding.elevators.forEach(this.createElevatorView, this);
+        this.efficientBuilding.floors.forEach(this.createFloorView, this);
     }
 
 
@@ -21,10 +24,16 @@ export class ViewManager {
             view.y = view.modelObject.position.y;
         });
         this.views = this.views.filter(view => view.modelObject.position.x >= 0);
-        this.building.floors.forEach(floor => {
+        this.inefficientBuilding.floors.forEach(floor => {
             floor.peopleWaiting.forEach(this.createPersonView, this);
         });
-        this.building.floors.forEach(floor => {
+        this.inefficientBuilding.floors.forEach(floor => {
+            floor.peopleWaiting.forEach(this.createPersonView, this);
+        });
+        this.efficientBuilding.floors.forEach(floor => {
+            floor.peopleWaiting.forEach(this.createPersonView, this);
+        });
+        this.efficientBuilding.floors.forEach(floor => {
             floor.peopleWaiting.forEach(this.createPersonView, this);
         });
 
@@ -47,7 +56,7 @@ export class ViewManager {
     createPersonView(person) {
         if (person.justArrived) {
             person.justArrived = false;
-            let spriteName = "personSprite" + (Math.floor(Math.random() * MAX_PEOPLE_WAITING) + 1);
+            let spriteName = "personSprite" + (Math.floor(Math.random() * PEOPLE_SPRITES_COUNT) + 1);
             let personView = new Kiwi.GameObjects.Sprite(this.state, this.state.textures[spriteName], 350, 0, true);
             personView.modelObject = person;
 
@@ -78,8 +87,8 @@ export class ViewManager {
             this.state.addChild(floorView);
             this.views.push(floorView);
 
-            let labelX = floor.id == 10 ? 192 : 202;
-            let floorLabel = new Kiwi.GameObjects.TextField(this.state, floor.id, labelX, floor.position.y + 8, "#000000");
+            let labelX = floor.isInEfficientBuilding ? 450 : 25;
+            let floorLabel = new Kiwi.GameObjects.TextField(this.state, floor.id, labelX, floor.position.y + 6, "#000000");
             this.state.addChild(floorLabel);
         }
     }

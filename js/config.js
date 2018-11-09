@@ -1,13 +1,13 @@
 export const NUMBER_OF_FLOORS = 10;
 export const FLOOR_HEIGHT = 50;
 export const ENTRANCE_HALL_Y = 500;
-export const ELEVATOR_SPEED = 10;
+export const ELEVATOR_SPEED = 1;
 export const ELEVATOR_WAITING_TIME = 1000 / ELEVATOR_SPEED;
 export const TOP_FLOOR_Y = 0;
 export const ELEVATOR_STATE_ENUM = { "GOING_UP": 1, "GOING_DOWN": 2, "READY": 3, "PICKING_UP_PEOPLE": 4, "WAITING_FOR_PEOPLE_TO_LEAVE": 5 };
-export const MAX_PEOPLE_WAITING = 8;
+export const MAX_PEOPLE_WAITING = 10;
 export const PERSON_CREATION_COEFFICIENT = 150 / ELEVATOR_SPEED;
-export const PEOPLE_DISTANCE_IN_LINE = 30;
+export const PEOPLE_DISTANCE_IN_LINE = 15;
 export const ELEVATOR_CAPACITY = 3;
 export const GO_BACKWARDS_THRESHOLD = 1;
-export const USE_INEFFICIENT_MANAGER = false;
+export const PEOPLE_SPRITES_COUNT = 10;

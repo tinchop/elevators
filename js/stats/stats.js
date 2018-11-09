@@ -19,23 +19,31 @@ class Stats {
 
     constructor() {
         this.startTime = new Date(); 
-        this.floorStats = [];
+        this.inefficientFloorStats = [];
+        this.efficientFloorStats = [];
         for (let i = 0; i < NUMBER_OF_FLOORS; i++) {
-            this.floorStats.push(new FloorStats(i + 1));
+            this.inefficientFloorStats.push(new FloorStats(i + 1));
+            this.efficientFloorStats.push(new FloorStats(i + 1));
         }
         
     }
 
     updatePeopleCreated(floorId) {
-        this.floorStats[floorId - 1].peopleCreated++;
+        this.inefficientFloorStats[floorId - 1].peopleCreated++;
+        this.efficientFloorStats[floorId - 1].peopleCreated++;
     }
 
-    updateTimeInSystem(person) {
+    updateTimeInSystem(person, efficient) {
         let now = new Date();
         let timeInSystem = now - person.creationTime;
         timeInSystem /= 1000;
 
-        let floorStats = this.floorStats[person.floorId - 1];
+        let floorStats;
+        if (efficient) {
+            floorStats = this.efficientFloorStats[person.floorId - 1];
+        } else {
+            floorStats = this.inefficientFloorStats[person.floorId - 1];
+        }
         floorStats.peopleThatLeft++;
         if (floorStats.maxTime < timeInSystem) {
             floorStats.maxTime = timeInSystem;
@@ -57,6 +65,8 @@ class Stats {
         elapsedTime /= 1000;
         let log = '  Elapsed time: ' + elapsedTime * ELEVATOR_SPEED + '\n';
         log += '\n';
+        log += 'Inefficient building stats: \n';
+        log += '\n';
         log += this._pad(10, 'Floor N°', ' ');
         log += this._pad(10, 'Avg time', ' ');
         log += this._pad(10, 'Min time', ' ');
@@ -65,7 +75,27 @@ class Stats {
         log += this._pad(10, 'Ppl left', ' ');
         log += '\n';
         log += '\n';
-        this.floorStats.forEach(floor => {
+        this.inefficientFloorStats.forEach(floor => {
+            log += this._pad(10, floor.id, ' ');
+            log += this._pad(10, parseFloat(floor.avgTime * ELEVATOR_SPEED).toFixed(2), ' ');
+            log += this._pad(10, parseFloat(floor.minTime * ELEVATOR_SPEED).toFixed(2), ' ');
+            log += this._pad(10, parseFloat(floor.maxTime * ELEVATOR_SPEED).toFixed(2), ' ');
+            log += this._pad(10, floor.peopleCreated, ' ');
+            log += this._pad(10, floor.peopleThatLeft, ' ');
+            log += '\n';
+        });
+        log += '\n';
+        log += 'Efficient building stats: \n';
+        log += '\n';
+        log += this._pad(10, 'Floor N°', ' ');
+        log += this._pad(10, 'Avg time', ' ');
+        log += this._pad(10, 'Min time', ' ');
+        log += this._pad(10, 'Max time', ' ');
+        log += this._pad(10, 'Ppl crtd', ' ');
+        log += this._pad(10, 'Ppl left', ' ');
+        log += '\n';
+        log += '\n';
+        this.efficientFloorStats.forEach(floor => {
             log += this._pad(10, floor.id, ' ');
             log += this._pad(10, parseFloat(floor.avgTime * ELEVATOR_SPEED).toFixed(2), ' ');
             log += this._pad(10, parseFloat(floor.minTime * ELEVATOR_SPEED).toFixed(2), ' ');
